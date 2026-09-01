@@ -1,0 +1,16 @@
+{
+	"name": "pi-ui-refactor",
+	"type": "module",
+	"version": "0.3.1",
+	"private": true,
+	"description": "pi Coding Agent 的前端 UI 重构守卫插件——放开手改 UI，但守住业务逻辑",
+	"license": "MIT",
+	"keywords": ["pi-package"],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/doccker/ui-refactor.git"
+	},
+	"pi": {
+		"extensions": ["./.pi/extensions/redesign-guard.ts"]
+	}
+}

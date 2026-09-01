@@ -1,0 +1,29 @@
+name: 想法与建议
+description: 新功能、支持新框架、改进现有流程
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提想法。说明一下：**本仓库不接受外部代码贡献（PR）**，
+        但所有 issue 都会看，有价值的想法会由维护者实现。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的实际问题
+      description: 先说问题，不用先说方案。真实场景比功能描述更有用
+      placeholder: 我们是 Svelte 项目，事件绑定 on:click 被改了但守卫没拦住
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: 你设想的解决方式（可选）
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充信息（可选）
+      description: 团队规模、项目类型、使用频率等，有助于判断优先级

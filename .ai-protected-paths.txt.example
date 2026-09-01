@@ -1,0 +1,29 @@
+# pi-ui-refactor 受保护路径
+# 一行一条规则，相对项目根目录。以 / 结尾表示目录。
+# 命中的文件禁止通过 edit / write / bash 修改。
+# 修改本文件后无需重启，下一次工具调用即生效。
+#
+# 匹配规则说明：
+#   - 按路径边界匹配，不是子串匹配。src/api/ 不会误伤 src/apiv2/
+#   - 逃出项目根目录的路径（../ 等）一律拦截
+#   - symlink 会被解开后再判断
+
+src/api/
+src/apis/
+src/services/
+src/service/
+src/store/
+src/stores/
+src/hooks/
+src/composables/
+src/router/
+src/routes/
+src/auth/
+src/permission/
+src/utils/request
+src/request/
+
+# 按需追加，例如：
+# src/business/
+# src/models/
+# src/constants/permission.ts

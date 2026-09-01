@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    # release 是公开发布分支（单提交快照），main 只存在于维护者本地
+    branches: [release, main]
+  pull_request:
+    branches: [release, main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # 项目直接用 node 跑 .ts（依赖 Node 的 type stripping），需要 22.6+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      # package.json 只做 pi extensions manifest，永远不得有 dependencies。
+      # 但 edit-recon.ts 会深度导入 pi 内部模块，测试需要 pi 在场。
+      - name: 安装 pi（仅测试用，不是运行时依赖）
+        run: npm install --no-save @earendil-works/pi-coding-agent
+
+      - name: 单元自测
+        run: node tools/smoke-test.ts
+
+      - name: 端到端验证
+        run: node tools/verify.ts
+
+      - name: 安装脚本可用性
+        run: |
+          mkdir -p /tmp/fake-project
+          bash install-project.sh /tmp/fake-project
+          test -f /tmp/fake-project/.pi/extensions/redesign-guard.ts
+          test -f /tmp/fake-project/.ai-protected-paths.txt
+
+  # 开源仓库的隐私红线：插件能看到用户私有代码，任何真实项目信息都不许进仓库
+  privacy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: 扫描敏感信息
+        run: |
+          if grep -rn -i -E "phx_[a-zA-Z0-9]|/Users/[a-z]+/(code|work|project)|/home/[a-z]+/(code|work|project)" \
+            --exclude-dir=.git . ; then
+            echo "::error::发现疑似私密 key 或本机绝对路径"
+            exit 1
+          fi
+          for p in todo.md AGENTS.override.md CLAUDE.override.md .codex .ai .playwright-mcp; do
+            if [ -e "$p" ]; then
+              echo "::error::仓库内出现维护者私有文件：$p"
+              exit 1
+            fi
+          done
+          echo "隐私扫描通过"
+
+      - name: 零依赖检查
+        run: |
+          node -e "
+            const p = require('./package.json');
+            for (const k of ['dependencies','devDependencies','peerDependencies'])
+              if (p[k] && Object.keys(p[k]).length) {
+                console.error('::error::package.json 出现 ' + k + '，违反零运行时依赖承诺');
+                process.exit(1);
+              }
+            console.log('零依赖检查通过');
+          "
