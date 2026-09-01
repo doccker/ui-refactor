@@ -1,0 +1,81 @@
+name: 报告问题
+description: 守卫误拦截、漏拦截、命令报错、截图失败等
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **请不要粘贴你的业务代码**。
+        本插件的定位是保护你的代码不被误改，反馈时同样请注意脱敏：
+        文件路径、组件名、接口地址都可以用 `src/xxx/Foo.vue` 这样的占位替代。
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 问题类型
+      options:
+        - 误拦截（改的是 UI，却被拦了）
+        - 漏拦截（改了业务逻辑，却没拦住）
+        - 命令报错 / 无响应
+        - 截图或对比环节失败
+        - 安装 / 探测结果不对
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: 版本
+      description: 插件版本见 README 顶部；pi 版本用 `pi --version`
+      placeholder: 插件 v0.2.4 / pi 0.84.3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stack
+    attributes:
+      label: 前端技术栈
+      options:
+        - Vue 单仓
+        - React 单仓
+        - monorepo（pnpm / turbo）
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 vs 实际行为
+      placeholder: |
+        期望：只改 class 应该放行
+        实际：被拦截，提示「检测到疑似业务逻辑改动」
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤
+      description: 用脱敏后的最小例子，越小越好
+      placeholder: |
+        1. /ui-init
+        2. /redesign 指向 src/pages/Foo.vue
+        3. Agent 尝试把 class="a" 改成 class="b"
+        4. 被拦截
+
+  - type: textarea
+    id: output
+    attributes:
+      label: 相关输出
+      description: 拦截原因、报错栈等。会自动按代码块渲染，不用加反引号
+      render: shell
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我已确认上面的内容不含公司代码、真实接口地址或其他敏感信息
+          required: true
