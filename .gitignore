@@ -1,0 +1,32 @@
+# ---- 本地维护专用，永不推送 ----
+# 维护者给 AI 的私有指令（pi 会用它替换同目录 AGENTS.md）
+AGENTS.override.md
+CLAUDE.override.md
+# 维护者自己的待办
+todo.md
+# 任务状态档案（含真实客户项目名）
+.codex/
+
+# ---- 发布构建产物（scripts/build-release.sh 生成）----
+/.release-snapshot/
+/.release-manifest.txt
+
+# ---- 插件运行时产物 ----
+# 截图、诊断日志、项目级 telemetry id
+.ai/
+# 委托截图时 playwright-mcp 的落盘目录
+.playwright-mcp/
+
+# ---- 使用者项目自己的配置 ----
+# 本仓库只提供 .ai-protected-paths.txt.example
+.ai-protected-paths.txt
+
+# ---- 依赖与编辑器 ----
+node_modules/
+.idea/
+.vscode/
+*.log
+
+# ---- 系统 ----
+.DS_Store
+Thumbs.db
